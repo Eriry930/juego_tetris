@@ -1,14 +1,15 @@
-const canvas = document.getElementById("tetris");
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById("tetris"); //llama al canvas en el JavaScript
+const ctx = canvas.getContext('2d'); // el contexto será en 2 dimenciones
 
 const scale = 20;
 
-ctx.scale(scale, scale);
+ctx.scale(scale, scale); //la escala del canvas para ver el juego 20 columnas y 25 filas dependiendo del alto y ancho del canvas
 
-const tWidth = canvas.width / scale;
+
+const tWidth = canvas.width / scale; 
 const tHeight = canvas.height / scale;
 
-const pieces = [
+const pieces = [ // dibuja las piezas dentro del tablero
     [
         [1, 1],
         [1, 1]
@@ -45,7 +46,7 @@ const pieces = [
         [0, 7, 0]
     ]
 ];
-const colors = [
+const colors = [ // da color a cada pieza
     null,
     '#FF0D72',
     '#0DC2FF',
@@ -60,9 +61,9 @@ let arena = [];
 
 let rand;
 
-const player = {
-    pos: {x: 0, y: 1},
-    matrix: null,
+const player = { // constante de tipo objeto
+    pos: {x: 0, y: 1}, //posicion de la pieza
+    matrix: null, 
     color: null
 }
 
@@ -113,9 +114,33 @@ function collides(player, arena) {
     return 0;
 }
 
+function mergeArena(matrix, x, y) {
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[i].length; j++) {
+            arena[y+i+1][x+j+1] = arena[y+i+1][x+j+1] || matrix[i][j];
+        }
+    }
+}
 
+function clearBlocks() {
+    for (let i = 1; i < arena.length-2; i++) {
+        let clear = 1;
 
+        for (let j = 1; j < arena[i].length-1; j++) {
+            if (!arena[i][j])
+                clear = 0;
+        }
 
+        if (clear) {
+            let r = new Array(tWidth).fill(0); // se llena el tablero con 0
+            r.push(1);
+            r.unshift(1);
+
+            arena.splice(i, 1);
+            arena.splice(1, 0, r);
+        }
+    }
+}
 
 function drawArena() {
     for (let i = 1; i < arena.length-2; i++) {
@@ -146,6 +171,13 @@ function initArena() {
     arena.push(r);
 }
 
+function gameOver() {
+    for (let j = 1; j < arena[1].length-1; j++)
+        if (arena[1][j])
+            return initArena();
+
+    return;
+}
 
 let interval = 1000;
 let lastTime = 0;
@@ -153,7 +185,7 @@ let count = 0;
 
 function update(time = 0) {
 
-    const dt = time - lastTime;
+    const dt = time - lastTime; //
     lastTime = time;
     count += dt;
 
@@ -184,7 +216,7 @@ function update(time = 0) {
     ctx.fillStyle = player.color;
     drawMatrix(player.matrix, player.pos.x, player.pos.y);
 
-    requestAnimationFrame(update);
+    requestAnimationFrame(update); // llama a esta funcion update
 }
 
 document.addEventListener("keydown", event => {
