@@ -209,30 +209,31 @@ function update(time = 0) {
         interval = 1000;
     }
 
-    ctx.fillStyle = "#000";
+    ctx.fillStyle = "#000"; // dibuja fondo del tetris
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    drawArena();
+    drawArena(); // acción para ejecutar el dibujo de cada ficha
     ctx.fillStyle = player.color;
     drawMatrix(player.matrix, player.pos.x, player.pos.y);
 
     requestAnimationFrame(update); // llama a esta funcion update
 }
 
-document.addEventListener("keydown", event => {
 
-    if (event.keyCode === 37 && interval-1) {
+document.addEventListener("keydown", function(tecla) { //movimiento de fichas mendiante teclas
+
+    if (tecla.key === "ArrowLeft" && interval-1) {
         player.pos.x--;
         if (collides(player, arena))
             player.pos.x++;
-    } else if (event.keyCode === 39 && interval-1) {
+    } else if (tecla.key === "ArrowRight" && interval-1) {
         player.pos.x++;
         if (collides(player, arena))
             player.pos.x--;
-    } else if (event.keyCode === 40) {
+    } else if (tecla.key === "ArrowDown") {
         player.pos.y++;
         count = 0;
-    } else if (event.keyCode === 38) {
+    } else if (tecla.key === "ArrowUp") {
         player.matrix = rotateMatrix(player.matrix, 1);
         if (collides(player, arena))
             player.matrix = rotateMatrix(player.matrix, -1);
@@ -241,6 +242,8 @@ document.addEventListener("keydown", event => {
     }
 
 });
+
+
 
 initArena();
 update();
