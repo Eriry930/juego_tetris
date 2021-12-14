@@ -1,47 +1,46 @@
 const canvas = document.getElementById("tetris"); //llama al canvas en el JavaScript
 const ctx = canvas.getContext('2d'); // el contexto será en 2 dimenciones
 
-const scale = 20;
+const scale = 20; // escala de los cuadros
 
 ctx.scale(scale, scale); //la escala del canvas para ver el juego 20 columnas y 25 filas dependiendo del alto y ancho del canvas
 
-
-const tWidth = canvas.width / scale; 
-const tHeight = canvas.height / scale;
+const tWidth = canvas.width / scale; //escala a lo ancho
+const tHeight = canvas.height / scale; //escala a lo alto
 
 const pieces = [ // dibuja las piezas dentro del tablero
     [
-        [1, 1],
+        [1, 1], // cuadrado
         [1, 1]
     ],
     [
-        [0, 2, 0, 0],
+        [0, 2, 0, 0], // linea de 4
         [0, 2, 0, 0],
         [0, 2, 0, 0],
         [0, 2, 0, 0]
     ],
     [
-        [0, 0, 0],
+        [0, 0, 0], // forma de z
         [3, 3, 0],
         [0, 3, 3]
     ],
     [
-        [0, 0, 0],
+        [0, 0, 0], // forma de s
         [0, 4, 4],
         [4, 4, 0]
     ],
     [
-        [5, 0, 0],
+        [5, 0, 0],  // forma de L
         [5, 0, 0],
         [5, 5, 0]
     ],
     [
-        [0, 0, 6],
+        [0, 0, 6], // forma de L al revez
         [0, 0, 6],
         [0, 6, 6]
     ],
     [
-        [0, 0, 0],
+        [0, 0, 0], // forma de T
         [7, 7, 7],
         [0, 7, 0]
     ]
@@ -53,22 +52,22 @@ const colors = [ // da color a cada pieza
     '#0DFF72',
     '#F538FF',
     '#FF8E0D',
-    '#FFE138',
+    '#76D7C4',
     '#3877FF'
 ];
 
-let arena = [];
+let arena = []; 
 
 let rand;
 
 const player = { // constante de tipo objeto
     pos: {x: 0, y: 1}, //posicion de la pieza
-    matrix: null, 
-    color: null
+    matrix: null,  
+    color: null 
 }
 
-rand = Math.floor(Math.random() * pieces.length);
-player.matrix = pieces[rand];
+rand = Math.floor(Math.random() * pieces.length); // elige las piezas aleatoriamente
+player.matrix = pieces[rand]; 
 player.color = colors[rand+1];
 
 function drawMatrix(matrix, x, y) {
@@ -80,7 +79,7 @@ function drawMatrix(matrix, x, y) {
     }
 }
 
-function rotateMatrix(matrix, dir) {
+function rotateMatrix(matrix, dir) { // le da la rotacion a la ficha 
     let newMatrix = [];
 
     for (let i in matrix)
@@ -103,7 +102,7 @@ function rotateMatrix(matrix, dir) {
     return newMatrix;
 }
 
-function collides(player, arena) {
+function collides(player, arena) { // funcion que controla las coliciones
     for (let i = 0; i < player.matrix.length; i++) {
         for (let j = 0; j < player.matrix[i].length; j++) {
             if (player.matrix[i][j] && arena[player.pos.y + i + 1][player.pos.x + j + 1])
@@ -122,7 +121,7 @@ function mergeArena(matrix, x, y) {
     }
 }
 
-function clearBlocks() {
+function clearBlocks() { // funcion que elimina los bloques de la ficha cuando se mueven
     for (let i = 1; i < arena.length-2; i++) {
         let clear = 1;
 
@@ -171,7 +170,7 @@ function initArena() {
     arena.push(r);
 }
 
-function gameOver() {
+function gameOver() { // funcion que reinicia el juego cuando se llenan las filas y no entran mas piezas
     for (let j = 1; j < arena[1].length-1; j++)
         if (arena[1][j])
             return initArena();
@@ -179,71 +178,70 @@ function gameOver() {
     return;
 }
 
-let interval = 1000;
+let interval = 1000; // intervalo de tiempo
 let lastTime = 0;
 let count = 0;
 
 function update(time = 0) {
 
-    const dt = time - lastTime; //
+    const dt = time - lastTime; // controla el tiempo en que baja la ficha
     lastTime = time;
     count += dt;
 
-    if (count >= interval) {
+    if (count >= interval) { 
         player.pos.y++;
         count = 0;
     }
 
     if (collides(player, arena)) {
         mergeArena(player.matrix, player.pos.x, player.pos.y-1);
-        clearBlocks();
-        gameOver();
+        clearBlocks(); // llama la funcion para que limpie los bloques
+        gameOver(); // llama la funcion gameOven cuando se pierde el juego
 
-        player.pos.y = 1;
+        player.pos.y = 1; 
         player.pos.x = 0;
 
         rand = Math.floor(Math.random() * pieces.length);
         player.matrix = pieces[rand];
         player.color = colors[rand+1];
 
-        interval = 1000;
+        interval = 1000; // intervalo de tiempo 
     }
 
-    ctx.fillStyle = "#000"; // dibuja fondo del tetris
+    ctx.fillStyle = " rgba(151, 50, 200, 0.09)"; // dibuja fondo del tetris y le da un efecto de sombra a la ficha     
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     drawArena(); // acción para ejecutar el dibujo de cada ficha
     ctx.fillStyle = player.color;
     drawMatrix(player.matrix, player.pos.x, player.pos.y);
 
-    requestAnimationFrame(update); // llama a esta funcion update
+    requestAnimationFrame(update); 
 }
 
 
 document.addEventListener("keydown", function(tecla) { //movimiento de fichas mendiante teclas
 
-    if (tecla.key === "ArrowLeft" && interval-1) {
+    if (tecla.key === "ArrowLeft" && interval-1) { // tecla hacia la izquierda
         player.pos.x--;
         if (collides(player, arena))
             player.pos.x++;
-    } else if (tecla.key === "ArrowRight" && interval-1) {
+    } else if (tecla.key === "ArrowRight" && interval-1) { // tecla hacia la derecha
         player.pos.x++;
         if (collides(player, arena))
             player.pos.x--;
-    } else if (tecla.key === "ArrowDown") {
+    } else if (tecla.key === "ArrowDown") { // tecla hacia abajo
         player.pos.y++;
         count = 0;
     } else if (tecla.key === "ArrowUp") {
-        player.matrix = rotateMatrix(player.matrix, 1);
+        player.matrix = rotateMatrix(player.matrix, 1); // tecla hacia arriba que hace rotar la pieza
         if (collides(player, arena))
-            player.matrix = rotateMatrix(player.matrix, -1);
-    } else if (event.keyCode === 32) {
+            player.matrix = rotateMatrix(player.matrix, -1); // tecla que hace que la pieza vaya hacia abajo más rápido
+    } else if (tecla.key === "End") {
         interval = 1;
     }
 
+ 
+
 });
-
-
-
 initArena();
 update();
