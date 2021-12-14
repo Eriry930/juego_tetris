@@ -5,16 +5,37 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/fontello.css" />
     <link rel="stylesheet" href="style.css">
     <title> TETRIS </title>
 </head>
 
 <body>
+   <div class="tetris">
     <header>
     <h1>Bienvenido al juego de tetris</h1>
+    <div id="puntaje">
+        Puntos: 0
+    </div>
     </header>
     <canvas id="tetris" width="200" height="400"></canvas> <!--este estilo si funciona-->
     <p>Te retamos a tener el mejor puntaje ¿Lo lograrás?</p>
+    </div>
+
+    <div class="botones">
+    <button onclick="izquierda" id="izquierda" class="icon-left-circled"></button>
+    <button onclick="derecha" id="derecha" class="icon-right-circled"></button>
+    <button onclick="abajo" id="abajo" class="icon-down-circled"> </button>
+    <button onclick="cambiar" id="cambiar" class="icon-up-circled"> </button>
+    <button onclick="reiniciar" id="reiniciar" class="icon-ccw"> </button>
+    </div>
+
+    <div id="perdiste">
+        <h1 class="txt_over"> GAME <br>
+            OVER
+        </h1>
+        <button onclick="reiniciar" id="reiniciar2" class="icon-ccw"> </button>
+        </div>
 
     <script src="script.js"></script> 
 </body>
