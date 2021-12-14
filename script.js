@@ -8,43 +8,43 @@ const scale = 20; // tamaño de la ficha
 
 ctx.scale(scale, scale); //la escala del canvas para ver el juego 20 columnas y 25 filas dependiendo del alto y ancho del canvas
 
-const tWidth = canvas.width / scale;
-const tHeight = canvas.height / scale;
+const tWidth = canvas.width / scale; //escala a lo ancho
+const tHeight = canvas.height / scale; //escala a lo alto
 
 const pieces = [
-  // dibuja las piezas
+  // dibuja las piezas dentro del tablero
   [
-    [1, 1],
+    [1, 1], // cuadrado
     [1, 1],
   ],
   [
-    [0, 2, 0, 0],
+    [0, 2, 0, 0], // linea de 4
     [0, 2, 0, 0],
     [0, 2, 0, 0],
     [0, 2, 0, 0],
   ],
   [
-    [0, 0, 0],
+    [0, 0, 0], // forma de z
     [3, 3, 0],
     [0, 3, 3],
   ],
   [
-    [0, 0, 0],
+    [0, 0, 0], // forma de s
     [0, 4, 4],
     [4, 4, 0],
   ],
   [
-    [5, 0, 0],
+    [5, 0, 0], // forma de L
     [5, 0, 0],
     [5, 5, 0],
   ],
   [
-    [0, 0, 6],
+    [0, 0, 6], // forma de L al revez
     [0, 0, 6],
     [0, 6, 6],
   ],
   [
-    [0, 0, 0],
+    [0, 0, 0], // forma de T
     [7, 7, 7],
     [0, 7, 0],
   ],
@@ -65,7 +65,7 @@ let arena = [];
 
 let rand;
 
-const player = {
+const player = { 
   // constante de tipo objeto
   pos: { x: 0, y: 1 }, //posicion de la pieza
   matrix: null,
@@ -128,7 +128,7 @@ function mergeArena(matrix, x, y) {
   }
 }
 
-function clearBlocks() {
+function clearBlocks() { // funcion que elimina los bloques de la ficha cuando se mueven
   for (let i = 1; i < arena.length - 2; i++) {
     this.clear = 1;
 
@@ -205,8 +205,8 @@ function update(time = 0) {
 
   if (collides(player, arena)) {
     mergeArena(player.matrix, player.pos.x, player.pos.y - 1);
-    clearBlocks();
-    gameOver();
+    clearBlocks(); // llama la funcion para que limpie los bloques
+    gameOver();  // llama la funcion gameOven cuando se pierde el juego
 
     player.pos.y = 1;
     player.pos.x = 0;
@@ -215,10 +215,10 @@ function update(time = 0) {
     player.matrix = pieces[rand];
     player.color = colors[rand + 1];
 
-    interval = 1000;
+    interval = 1000; // intervalo de tiempo 
   }
 
-  ctx.fillStyle = "#000"; // dibuja fondo del tetris
+  ctx.fillStyle = "rgba(0, 0, 0, 0.09)"; // dibuja fondo del tetris
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   drawArena(); // acción para ejecutar el dibujo de cada ficha
@@ -228,23 +228,23 @@ function update(time = 0) {
   requestAnimationFrame(update); // llama a esta funcion update
 }
 
-document.addEventListener("keydown", function (tecla) {
+document.addEventListener("keydown", function (tecla) { //movimiento de fichas mendiante teclas
   //movimiento de fichas mendiante teclas
 
-  if (tecla.key === "ArrowLeft" && interval - 1) {
+  if (tecla.key === "ArrowLeft" && interval - 1) {  // tecla hacia la izquierda
     player.pos.x--;
     if (collides(player, arena)) player.pos.x++;
-  } else if (tecla.key === "ArrowRight" && interval - 1) {
+  } else if (tecla.key === "ArrowRight" && interval - 1) {  // tecla hacia la derecha
     player.pos.x++;
-    if (collides(player, arena)) player.pos.x--;
-  } else if (tecla.key === "ArrowDown") {
+    if (collides(player, arena)) player.pos.x--;  
+  } else if (tecla.key === "ArrowDown") { // tecla hacia abajo
     player.pos.y++;
     count = 0;
-  } else if (tecla.key === "ArrowUp") {
+  } else if (tecla.key === "ArrowUp") { // tecla hacia arriba que hace rotar la pieza
     player.matrix = rotateMatrix(player.matrix, 1);
     if (collides(player, arena))
       player.matrix = rotateMatrix(player.matrix, -1);
-  } else if (event.keyCode === 32) {
+  } else if (tecla.key === "End") {
     interval = 1;
   }
 });
