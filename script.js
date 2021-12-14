@@ -194,7 +194,7 @@ let lastTime = 0;
 let count = 0;
 
 function update(time = 0) {
-  const dt = time - lastTime; // tiempo de espera por ficha
+  const dt = time - lastTime; 
   lastTime = time;
   count += dt;
 
